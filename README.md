@@ -1,0 +1,2 @@
+# Leetcode
+Solve Leetcode POTD
