@@ -1,0 +1,59 @@
+class Solution {
+public:
+
+    // Checks whether the array is non-decreasing
+    bool isNonDecreasing(const vector<int>& nums) {
+
+        // Traverse from second element to end
+        for (int i = 1; i < nums.size(); i++) {
+
+            // If current element is smaller than previous → not sorted
+            if (nums[i] < nums[i - 1]) 
+                return false;
+        }
+
+        // Array is non-decreasing
+        return true;
+    }
+
+    int minimumPairRemoval(vector<int>& nums) {
+
+        int ops = 0;   // Counts number of merge operations
+
+        // Repeat until the array becomes non-decreasing
+        while (!isNonDecreasing(nums)) {
+
+            // Min-heap to store {pair sum, index}
+            priority_queue<
+                pair<int, int>, 
+                vector<pair<int, int>>, 
+                greater<>
+            > pq;
+
+            // Compute sum of every adjacent pair
+            for (int i = 0; i < nums.size() - 1; i++) {
+
+                // Push (sum of nums[i] & nums[i+1], starting index)
+                pq.push({nums[i] + nums[i + 1], i});
+            }
+
+            // Extract the adjacent pair with minimum sum
+            auto [sum, idx] = pq.top();
+            pq.pop();
+
+            // Merge the pair by adding nums[idx+1] to nums[idx]
+            nums[idx] += nums[idx + 1];
+
+            // Remove the second element of the merged pair
+            nums.erase(nums.begin() + idx + 1);
+
+            // Increment operation count
+            ops++;
+        }
+
+        // Return total number of operations
+        return ops;
+    }
+};
+TC: O(n² log n)
+SC: O(n)
